@@ -1,5 +1,4 @@
 ---
-
 - name: shell commands to disable filesystem
           command: "{{ item }}"
           with_items:
