@@ -1,0 +1,77 @@
+---
+
+- name: shell commands to disable filesystem
+          command: "{{ item }}"
+          with_items:
+            - rmmod cramfs 
+            - rmmod freevxfs 
+            - rmmod jffs2 
+            - rmmod hfs 
+            - rmmod hfsplus 
+            - rmmod squashfs 
+            - rmmod udf 
+            - rmmod vfat
+            - grub2-mkconfig -o /boot/grub2/grub.cfg
+            #- systemctl disable autofs
+            #- systemctl disable rhnsd.service
+            - systemctl disable avahi-daemon.service
+            #- systemctl disable rpcbind.service
+            - systemctl disable cups.service
+            - systemctl restart postfix
+            - sysctl -w fs.suid_dumpable=0
+            - chkconfig chargen-dgram off
+            - chkconfig chargen-stream off
+            - chkconfig daytime-dgram off
+            - chkconfig daytime-stream off
+            - chkconfig discard-dgram off
+            - chkconfig discard-stream off
+            - chkconfig echo-dgram off
+            - chkconfig echo-stream off
+            - chkconfig time-dgram off
+            - chkconfig time-stream off
+            - chkconfig tftp off
+            #- systemctl disable xinetd
+            - systemctl disable avahi-daemon
+            - systemctl disable dhcpd
+            - systemctl disable slapd
+            #- systemctl disable nfs
+            #- systemctl disable nfs-server
+            #- systemctl disable rpcbind
+            - systemctl disable named
+            - systemctl disable vsftpd
+            - systemctl disable httpd
+            - systemctl disable dovecot
+            - systemctl disable smb
+            - systemctl disable squid
+            - systemctl disable rsh.socket
+            - systemctl disable rlogin.socket
+            - systemctl disable rexec.socket
+            - systemctl disable kdump.service
+            - sysctl -w net.ipv4.ip_forward=0
+            - sysctl -w net.ipv4.route.flush=1
+            - sysctl -w net.ipv4.conf.all.send_redirects=0
+            - sysctl -w net.ipv4.conf.default.send_redirects=0
+            - sysctl -w net.ipv4.route.flush=1
+            - sysctl -w net.ipv4.conf.all.accept_source_route=0
+            - sysctl -w net.ipv4.conf.default.accept_source_route=0
+            - sysctl -w net.ipv4.route.flush=1
+            - sysctl -w net.ipv4.conf.all.accept_redirects=0
+            - sysctl -w net.ipv4.conf.default.accept_redirects=0
+            - sysctl -w net.ipv4.route.flush=1
+            - sysctl -w net.ipv4.conf.all.secure_redirects=0
+            - sysctl -w net.ipv4.conf.default.secure_redirects=0
+            - sysctl -w net.ipv4.route.flush=1
+            - sysctl -w net.ipv4.conf.all.log_martians=1
+            - sysctl -w net.ipv4.conf.default.log_martians=1
+            - sysctl -w net.ipv4.route.flush=1
+            - sysctl -w net.ipv4.icmp_echo_ignore_broadcasts=1
+            - sysctl -w net.ipv4.route.flush=1
+            - sysctl -w net.ipv4.icmp_ignore_bogus_error_responses=1
+            - sysctl -w net.ipv4.route.flush=1
+            - sysctl -w net.ipv4.conf.all.rp_filter=1
+            - sysctl -w net.ipv4.conf.default.rp_filter=1
+            - sysctl -w net.ipv4.route.flush=1
+            - sysctl -w net.ipv4.tcp_syncookies=1
+            - sysctl -w net.ipv4.route.flush=1
+            - sysctl -w fs.suid_dumpable=0
+            - sysctl -w kernel.randomize_va_space=2
