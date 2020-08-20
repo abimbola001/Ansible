@@ -1,0 +1,43 @@
+---
+  - name: Linux SSH file Hardening
+    hosts:
+    remote_user:
+    become: yes
+ 
+ 
+    tasks:
+        - name: updating ssh configuration file
+          lineinfile:
+            backup: yes
+            state: present
+            dest: /etc/ssh/sshd_config
+            regexp: "{{ item.regexp }}"
+            line: "{{ item.line }}"
+          with_items:
+            - { regexp: '^ClientAliveInterval', line: 'ClientAliveInterval 300' }
+            - { regexp: '^X11Forwarding', line: 'X11Forwarding no' }
+            - { regexp: '^MaxAuthTries', line: 'MaxAuthTries 4' }
+            - { regexp: '^IgnoreRhosts', line: 'IgnoreRhosts yes' }
+            - { regexp: '^Protocol', line: 'Protocol 2' }
+            - { regexp: '^LogLevel', line: 'LogLevel INFO' }
+            - { regexp: '^HostbasedAuthentication', line: 'HostbasedAuthentication no' }
+            - { regexp: '^PermitRootLogin', line: 'PermitRootLogin no' }
+            - { regexp: '^PermitUserEnvironment', line: 'PermitUserEnvironment no' }
+            - { regexp: '^LoginGraceTime', line: 'LoginGraceTime 60' }
+            - { regexp: '^Ciphers', line: 'Ciphers aes128-ctr,aes192-ctr,aes256-ctr' }
+            - { regexp: '^MACs', line: 'MACs hmac-sha2-512,hmac-sha2-256,hmac-sha1,hmac-sha1-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com' }
+            - { regexp: '^IgnoreUserKnownHosts', line: 'IgnoreUserKnownHosts yes'}
+            - { regexp: '^ClientAliveCountMax',  line: 'ClientAliveCountMax 0'}
+ 
+        - name: change file ownership, group and permissions
+          file:
+            path: /etc/ssh/sshd_config
+            owner: root
+            group: root
+            mode:  og-rwx
+ 
+ 
+        - name: restart ssh daemon
+          service:
+            name=sshd
+            state=restarted
