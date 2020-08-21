@@ -1,5 +1,5 @@
 ---
-  - name: Aruba switch
+ - name: Aruba switch
     gather_facts: false
     hosts:
     connection: local
