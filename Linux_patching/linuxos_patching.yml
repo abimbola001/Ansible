@@ -1,0 +1,39 @@
+---
+  - name: Redhat Linux patching  OS
+    hosts:
+    remote_user: admin
+    gather_fact: no
+    become: yes
+ 
+ 
+    tasks:
+        # add the node to the satellite server
+        - name: register server with satellite server
+          command: subscription-manager register
+          register: myoutput
+ 
+        - name: display output
+          debug: var=myoutput.stdout
+ 
+        # upgrading all the packages on the server
+        - name: upgrade all packages
+          yum:
+            name: '*'
+            state: latest
+ 
+        - name: check for reboot hint
+          shell: if [ $(rpm -q --last kernel | awk 'NR==1 {print $1}') != kernel-$(uname -r) ]; then echo 'reboot'; else echo 'Kernel is current'; fi
+          ignore_errors: true
+          register: reboot_hint
+ 
+        - name: Rebooting ...
+          command: shutdown -r now "Reboot required for updated kernel"
+          async: 0
+          poll: 0
+          ignore_errors: true
+          changed_when: "reboot_hint.stdout == 'reboot'"
+          register: rebooting
+ 
+        - name: Wait for computer to reboot...
+          pause: seconds=60
+          when: rebooting|changed
