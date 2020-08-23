@@ -1,7 +1,7 @@
 ---
   - name: Redhat Linux patching  OS
     hosts:
-    remote_user: admin
+    remote_user: 
     gather_fact: no
     become: yes
  
